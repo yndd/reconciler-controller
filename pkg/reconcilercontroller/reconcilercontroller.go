@@ -8,8 +8,8 @@ import (
 	"github.com/pkg/errors"
 	pkgmetav1 "github.com/yndd/ndd-core/apis/pkg/meta/v1"
 	"github.com/yndd/ndd-runtime/pkg/logging"
-	"github.com/yndd/ndd-runtime/pkg/resource"
 	"github.com/yndd/ndd-target-runtime/pkg/grpcserver"
+	"github.com/yndd/ndd-target-runtime/pkg/resource"
 	"github.com/yndd/registrator/registrator"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/client-go/rest"
@@ -74,7 +74,7 @@ type reconcilerControllerImpl struct {
 	options *Options
 	log     logging.Logger
 
-	registrator registrator.registrator
+	registrator registrator.Registrator
 	// server
 	server grpcserver.GrpcServer
 	stopCh chan struct{}

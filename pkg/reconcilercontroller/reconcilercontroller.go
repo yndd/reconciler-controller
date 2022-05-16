@@ -13,7 +13,6 @@ import (
 	"github.com/yndd/registrator/registrator"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/client-go/rest"
-	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
@@ -33,7 +32,7 @@ type Options struct {
 	ControllerConfigName      string
 }
 
-func New(ctx context.Context, cfg func() *rest.Config, o *Options) (ReconcilerController, error) {
+func New(ctx context.Context, config *rest.Config, o *Options) (ReconcilerController, error) {
 	log := o.Logger
 	log.Debug("new reconciler controller")
 
@@ -42,10 +41,13 @@ func New(ctx context.Context, cfg func() *rest.Config, o *Options) (ReconcilerCo
 		stopCh:  make(chan struct{}),
 	}
 	// get client
-	client, err := getClient(o.Scheme)
+	client, err := client.New(config, client.Options{
+		Scheme: o.Scheme,
+	})
 	if err != nil {
 		return nil, err
 	}
+
 	// create registrator
 	ctx, r.cfn = context.WithCancel(ctx)
 	switch o.ServiceDiscovery {
@@ -108,13 +110,4 @@ func (r *reconcilerControllerImpl) Start() error {
 		HealthKind: registrator.HealthKindGRPC,
 	})
 	return nil
-}
-
-func getClient(scheme *runtime.Scheme) (client.Client, error) {
-	cfg, err := ctrl.GetConfig()
-	if err != nil {
-		return nil, err
-	}
-
-	return client.New(cfg, client.Options{Scheme: scheme})
 }

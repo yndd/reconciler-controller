@@ -7,7 +7,7 @@ require (
 	github.com/yndd/ndd-core v0.2.17
 	github.com/yndd/ndd-runtime v0.5.8
 	github.com/yndd/ndd-target-runtime v0.0.41
-	github.com/yndd/registrator v0.0.10
+	github.com/yndd/registrator v0.0.12
 	k8s.io/apimachinery v0.24.0
 	k8s.io/client-go v0.24.0
 	sigs.k8s.io/controller-runtime v0.12.0

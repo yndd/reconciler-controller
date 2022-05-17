@@ -5,15 +5,12 @@ import (
 	"os"
 	"strings"
 
-	"github.com/pkg/errors"
 	pkgmetav1 "github.com/yndd/ndd-core/apis/pkg/meta/v1"
 	"github.com/yndd/ndd-runtime/pkg/logging"
 	"github.com/yndd/ndd-target-runtime/pkg/grpcserver"
-	"github.com/yndd/ndd-target-runtime/pkg/resource"
 	"github.com/yndd/registrator/registrator"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/client-go/rest"
-	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
 type ReconcilerController interface {
@@ -27,6 +24,7 @@ type Options struct {
 	Logger                    logging.Logger
 	Scheme                    *runtime.Scheme
 	GrpcBindAddress           string
+	DcName                    string
 	ServiceDiscovery          pkgmetav1.ServiceDiscoveryType
 	ServiceDiscoveryNamespace string
 	ControllerConfigName      string
@@ -40,33 +38,19 @@ func New(ctx context.Context, config *rest.Config, o *Options) (ReconcilerContro
 		options: o,
 		stopCh:  make(chan struct{}),
 	}
-	// get client
-	client, err := client.New(config, client.Options{
-		Scheme: o.Scheme,
-	})
-	if err != nil {
-		return nil, err
-	}
 
 	// create registrator
 	ctx, r.cfn = context.WithCancel(ctx)
-	switch o.ServiceDiscovery {
-	case pkgmetav1.ServiceDiscoveryTypeConsul:
-		log.Debug("serviceDiscoveryNamespace", "serviceDiscoveryNamespace", o.ServiceDiscoveryNamespace)
-		var err error
-		r.registrator, err = registrator.NewConsulRegistrator(ctx, o.ServiceDiscoveryNamespace, "kind-dc1",
-			registrator.WithClient(resource.ClientApplicator{
-				Client:     client,
-				Applicator: resource.NewAPIPatchingApplicator(client),
-			}),
-			registrator.WithLogger(o.Logger))
-
-		if err != nil {
-			return nil, errors.Wrap(err, "Cannot initialize registrator")
-		}
-	case pkgmetav1.ServiceDiscoveryTypeK8s:
-	default:
-		r.registrator = registrator.NewNopRegistrator()
+	var err error
+	r.registrator, err = registrator.New(ctx, config, &registrator.Options{
+		Logger:                    o.Logger,
+		Scheme:                    o.Scheme,
+		DcName:                    o.DcName,
+		ServiceDiscovery:          o.ServiceDiscovery,
+		ServiceDiscoveryNamespace: o.ServiceDiscoveryNamespace,
+	})
+	if err != nil {
+		return nil, err
 	}
 
 	return r, nil

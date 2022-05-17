@@ -10,7 +10,6 @@ import (
 	"github.com/yndd/ndd-runtime/pkg/logging"
 	"github.com/yndd/ndd-target-runtime/pkg/grpcserver"
 	"github.com/yndd/registrator/registrator"
-	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/client-go/rest"
 )
 
@@ -22,14 +21,14 @@ type ReconcilerController interface {
 }
 
 type Options struct {
-	Logger                    logging.Logger
-	Scheme                    *runtime.Scheme
-	GrpcBindAddress           string
-	DcName                    string
-	ServiceDiscovery          pkgmetav1.ServiceDiscoveryType
-	ServiceDiscoveryNamespace string
-	ControllerConfigName      string
-	Registrator               registrator.Registrator
+	Logger logging.Logger
+	//Scheme                    *runtime.Scheme
+	GrpcBindAddress string
+	//DcName                    string
+	//ServiceDiscovery          pkgmetav1.ServiceDiscoveryType
+	//ServiceDiscoveryNamespace string
+	ControllerConfigName string
+	Registrator          registrator.Registrator
 }
 
 func New(ctx context.Context, config *rest.Config, o *Options) (ReconcilerController, error) {
@@ -37,8 +36,8 @@ func New(ctx context.Context, config *rest.Config, o *Options) (ReconcilerContro
 	log.Debug("new reconciler controller")
 
 	r := &reconcilerControllerImpl{
-		options: o,
-		stopCh:  make(chan struct{}),
+		options:     o,
+		stopCh:      make(chan struct{}),
 		registrator: o.Registrator,
 	}
 

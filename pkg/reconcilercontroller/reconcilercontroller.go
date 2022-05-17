@@ -28,6 +28,7 @@ type Options struct {
 	ServiceDiscovery          pkgmetav1.ServiceDiscoveryType
 	ServiceDiscoveryNamespace string
 	ControllerConfigName      string
+	Registrator               registrator.Registrator
 }
 
 func New(ctx context.Context, config *rest.Config, o *Options) (ReconcilerController, error) {
@@ -37,20 +38,7 @@ func New(ctx context.Context, config *rest.Config, o *Options) (ReconcilerContro
 	r := &reconcilerControllerImpl{
 		options: o,
 		stopCh:  make(chan struct{}),
-	}
-
-	// create registrator
-	ctx, r.cfn = context.WithCancel(ctx)
-	var err error
-	r.registrator, err = registrator.New(ctx, config, &registrator.Options{
-		Logger:                    o.Logger,
-		Scheme:                    o.Scheme,
-		DcName:                    o.DcName,
-		ServiceDiscovery:          o.ServiceDiscovery,
-		ServiceDiscoveryNamespace: o.ServiceDiscoveryNamespace,
-	})
-	if err != nil {
-		return nil, err
+		registrator: o.Registrator,
 	}
 
 	return r, nil

@@ -2,6 +2,7 @@ package reconcilercontroller
 
 import (
 	"context"
+	"fmt"
 	"os"
 	"strings"
 
@@ -78,7 +79,7 @@ func (r *reconcilerControllerImpl) Start() error {
 		ID:         os.Getenv("POD_NAME"),
 		Port:       pkgmetav1.GnmiServerPort,
 		Address:    strings.Join([]string{os.Getenv("POD_NAME"), os.Getenv("GRPC_SVC_NAME"), os.Getenv("POD_NAMESPACE"), "svc", "cluster", "local"}, "."),
-		Tags:       []string{},
+		Tags:       []string{fmt.Sprintf("pod=%s/%s", os.Getenv("POD_NAMESPACE"), os.Getenv("POD_NAME"))},
 		HealthKind: registrator.HealthKindGRPC,
 	})
 	return nil

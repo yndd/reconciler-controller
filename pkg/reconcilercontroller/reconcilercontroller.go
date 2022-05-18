@@ -2,7 +2,6 @@ package reconcilercontroller
 
 import (
 	"context"
-	"fmt"
 	"os"
 	"strings"
 
@@ -21,14 +20,9 @@ type ReconcilerController interface {
 }
 
 type Options struct {
-	Logger logging.Logger
-	//Scheme                    *runtime.Scheme
+	Logger          logging.Logger
 	GrpcBindAddress string
-	//DcName                    string
-	//ServiceDiscovery          pkgmetav1.ServiceDiscoveryType
-	//ServiceDiscoveryNamespace string
-	ControllerConfigName string
-	Registrator          registrator.Registrator
+	Registrator     registrator.Registrator
 }
 
 func New(ctx context.Context, config *rest.Config, o *Options) (ReconcilerController, error) {
@@ -74,11 +68,11 @@ func (r *reconcilerControllerImpl) Start() error {
 	}
 	// register the service
 	r.registrator.Register(r.ctx, &registrator.Service{
-		Name:       pkgmetav1.GetServiceName(r.options.ControllerConfigName, "reconciler"),
+		Name:       os.Getenv("SERVICE_NAME"),
 		ID:         os.Getenv("POD_NAME"),
 		Port:       pkgmetav1.GnmiServerPort,
 		Address:    strings.Join([]string{os.Getenv("POD_NAME"), os.Getenv("GRPC_SVC_NAME"), os.Getenv("POD_NAMESPACE"), "svc", "cluster", "local"}, "."),
-		Tags:       []string{fmt.Sprintf("pod=%s/%s", os.Getenv("POD_NAMESPACE"), os.Getenv("POD_NAME"))},
+		Tags:       pkgmetav1.GetServiceTag(os.Getenv("POD_NAMESPACE"), os.Getenv("POD_NAME")),
 		HealthKind: registrator.HealthKindGRPC,
 	})
 	return nil

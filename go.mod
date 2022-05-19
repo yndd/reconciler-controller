@@ -5,7 +5,7 @@ go 1.18
 require (
 	github.com/yndd/ndd-core v0.2.19
 	github.com/yndd/ndd-runtime v0.5.8
-	github.com/yndd/ndd-target-runtime v0.0.45
+	github.com/yndd/ndd-target-runtime v0.0.46
 	github.com/yndd/registrator v0.0.12
 	k8s.io/client-go v0.24.0
 )

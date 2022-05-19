@@ -20,9 +20,9 @@ type ReconcilerController interface {
 }
 
 type Options struct {
-	Logger          logging.Logger
-	GrpcBindAddress string
-	Registrator     registrator.Registrator
+	Logger            logging.Logger
+	GrpcServerAddress string
+	Registrator       registrator.Registrator
 }
 
 func New(ctx context.Context, config *rest.Config, o *Options) (ReconcilerController, error) {
@@ -30,9 +30,10 @@ func New(ctx context.Context, config *rest.Config, o *Options) (ReconcilerContro
 	log.Debug("new reconciler controller")
 
 	r := &reconcilerControllerImpl{
-		options:     o,
-		stopCh:      make(chan struct{}),
-		registrator: o.Registrator,
+		options:           o,
+		stopCh:            make(chan struct{}),
+		registrator:       o.Registrator,
+		grpcServerAddress: o.GrpcServerAddress,
 	}
 
 	return r, nil
@@ -41,6 +42,8 @@ func New(ctx context.Context, config *rest.Config, o *Options) (ReconcilerContro
 type reconcilerControllerImpl struct {
 	options *Options
 	log     logging.Logger
+
+	grpcServerAddress string
 
 	registrator registrator.Registrator
 	// server
@@ -59,7 +62,7 @@ func (r *reconcilerControllerImpl) Start() error {
 	r.log.Debug("starting reconciler controller...")
 
 	// start grpc server
-	r.server = grpcserver.New(pkgmetav1.GnmiServerPort,
+	r.server = grpcserver.New(r.grpcServerAddress,
 		grpcserver.WithHealth(true),
 		grpcserver.WithLogger(r.log),
 	)

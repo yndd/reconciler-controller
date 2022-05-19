@@ -1523,8 +1523,8 @@ github.com/yndd/ndd-runtime v0.2.51/go.mod h1:1mXKpIPdY80e0LxpGiVMtTWcHuuXIBZEHl
 github.com/yndd/ndd-runtime v0.3.0/go.mod h1:vBCpUsDUymCEaYOKOmI0tbpggC9eiU8xlirnT1ZN1Sc=
 github.com/yndd/ndd-runtime v0.5.8 h1:G9CHgng4gBui6xnVfwefhqPpDik9TfOKXBKEc46BBTw=
 github.com/yndd/ndd-runtime v0.5.8/go.mod h1:J9Lqkfh+oCtRBkVYdPPwnIaOnv9CC30tJ6WTyYEcr0Q=
-github.com/yndd/ndd-target-runtime v0.0.45 h1:d07vzkXwnFWLGOV+W3xOF5IHiA1T9WrxaV30EkAgYA8=
-github.com/yndd/ndd-target-runtime v0.0.45/go.mod h1:tQyXJylesUuVuXEnaUC8qVlrkENBr7RElldxzqpefmI=
+github.com/yndd/ndd-target-runtime v0.0.46 h1:DNWfefIf1NUaGkIyJVJP3+a7w5TH+LOkZ4G1bKWsXGE=
+github.com/yndd/ndd-target-runtime v0.0.46/go.mod h1:tQyXJylesUuVuXEnaUC8qVlrkENBr7RElldxzqpefmI=
 github.com/yndd/ndd-yang v0.1.62/go.mod h1:GT/8efIchBH1sQ6J64AM1FZDXXIaWeirkYUpbmDPlHI=
 github.com/yndd/ndd-yang v0.1.276/go.mod h1:vcKhP5OU3oJHSEILaE0HEgZKxftcu2GFOGdS6w0TauM=
 github.com/yndd/ndd-yang v0.1.448/go.mod h1:rIFXnOALLTloxMQtqGmTq32q6V9iTVHySE4ELup7hes=

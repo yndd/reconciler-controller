@@ -35,6 +35,7 @@ func New(ctx context.Context, config *rest.Config, o *Options) (ReconcilerContro
 		stopCh:            make(chan struct{}),
 		registrator:       o.Registrator,
 		grpcServerAddress: o.GrpcServerAddress,
+		log: o.Logger,
 	}
 
 	return r, nil

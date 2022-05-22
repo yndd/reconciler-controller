@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	pkgmetav1 "github.com/yndd/ndd-core/apis/pkg/meta/v1"
+	pkgv1 "github.com/yndd/ndd-core/apis/pkg/v1"
 	"github.com/yndd/ndd-runtime/pkg/logging"
 	"github.com/yndd/ndd-target-runtime/pkg/grpcserver"
 	"github.com/yndd/registrator/registrator"
@@ -71,12 +72,12 @@ func (r *reconcilerControllerImpl) Start() error {
 	}
 	// register the service
 	r.registrator.Register(r.ctx, &registrator.Service{
-		Name:       os.Getenv("SERVICE_NAME"),
-		ID:         os.Getenv("POD_NAME"),
-		Port:       pkgmetav1.GnmiServerPort,
-		Address:    strings.Join([]string{os.Getenv("POD_NAME"), os.Getenv("GRPC_SVC_NAME"), os.Getenv("POD_NAMESPACE"), "svc", "cluster", "local"}, "."),
-		Tags:       pkgmetav1.GetServiceTag(os.Getenv("POD_NAMESPACE"), os.Getenv("POD_NAME")),
-		HealthKind: registrator.HealthKindGRPC,
+		Name:         os.Getenv("SERVICE_NAME"),
+		ID:           os.Getenv("POD_NAME"),
+		Port:         pkgmetav1.GnmiServerPort,
+		Address:      strings.Join([]string{os.Getenv("POD_NAME"), os.Getenv("GRPC_SVC_NAME"), os.Getenv("POD_NAMESPACE"), "svc", "cluster", "local"}, "."),
+		Tags:         pkgv1.GetServiceTag(os.Getenv("POD_NAMESPACE"), os.Getenv("POD_NAME")),
+		HealthChecks: []registrator.HealthKind{registrator.HealthKindGRPC},
 	})
 	return nil
 }

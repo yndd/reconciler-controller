@@ -35,8 +35,8 @@ func New(ctx context.Context, config *rest.Config, o *Options) (ReconcilerContro
 		stopCh:            make(chan struct{}),
 		registrator:       o.Registrator,
 		grpcServerAddress: o.GrpcServerAddress,
-		log: o.Logger,
-		ctx: ctx,
+		log:               o.Logger,
+		ctx:               ctx,
 	}
 
 	return r, nil
@@ -62,7 +62,8 @@ func (r *reconcilerControllerImpl) Stop() error {
 }
 
 func (r *reconcilerControllerImpl) Start() error {
-	r.log.Debug("starting reconciler controller...")
+	log := r.log.WithValues()
+	log.Debug("starting reconciler controller...", "grpcServerAddress", r.grpcServerAddress)
 
 	// start grpc server
 	r.server = grpcserver.New(r.grpcServerAddress,

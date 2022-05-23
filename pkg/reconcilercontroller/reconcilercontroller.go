@@ -79,7 +79,7 @@ func (r *reconcilerControllerImpl) Start() error {
 		Port:         pkgmetav1.GnmiServerPort,
 		Address:      strings.Join([]string{os.Getenv("POD_NAME"), os.Getenv("GRPC_SVC_NAME"), os.Getenv("POD_NAMESPACE"), "svc", "cluster", "local"}, "."),
 		Tags:         pkgv1.GetServiceTag(os.Getenv("POD_NAMESPACE"), os.Getenv("POD_NAME")),
-		HealthChecks: []registrator.HealthKind{registrator.HealthKindTTL, registrator.HealthKindGRPC},
+		HealthChecks: []registrator.HealthKind{registrator.HealthKindGRPC, registrator.HealthKindTTL},
 	})
 	return nil
 }

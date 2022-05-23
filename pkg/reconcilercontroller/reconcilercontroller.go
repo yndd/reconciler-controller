@@ -36,6 +36,7 @@ func New(ctx context.Context, config *rest.Config, o *Options) (ReconcilerContro
 		registrator:       o.Registrator,
 		grpcServerAddress: o.GrpcServerAddress,
 		log: o.Logger,
+		ctx: ctx,
 	}
 
 	return r, nil

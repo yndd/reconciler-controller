@@ -4,10 +4,11 @@ import (
 	"context"
 	"os"
 
+	"github.com/yndd/grpchandlers/pkg/healthhandler"
+	"github.com/yndd/grpcserver"
 	pkgmetav1 "github.com/yndd/ndd-core/apis/pkg/meta/v1"
 	pkgv1 "github.com/yndd/ndd-core/apis/pkg/v1"
 	"github.com/yndd/ndd-runtime/pkg/logging"
-	"github.com/yndd/ndd-target-runtime/pkg/grpcserver"
 	"github.com/yndd/registrator/registrator"
 	"k8s.io/client-go/rest"
 )
@@ -49,10 +50,10 @@ type reconcilerControllerImpl struct {
 
 	registrator registrator.Registrator
 	// server
-	server grpcserver.GrpcServer
+	server *grpcserver.GrpcServer
 	stopCh chan struct{}
-	cfn    context.CancelFunc
-	ctx    context.Context
+	//cfn    context.CancelFunc
+	ctx context.Context
 }
 
 func (r *reconcilerControllerImpl) Stop() error {
@@ -64,12 +65,20 @@ func (r *reconcilerControllerImpl) Start() error {
 	log := r.log.WithValues()
 	log.Debug("starting reconciler controller...", "grpcServerAddress", r.grpcServerAddress)
 
-	// start grpc server
-	r.server = grpcserver.New(r.grpcServerAddress,
-		grpcserver.WithHealth(true),
+	ssw := healthhandler.New(&healthhandler.Options{
+		Logger: r.log,
+	})
+
+	r.server = grpcserver.New(grpcserver.Config{
+		Address: r.grpcServerAddress,
+		GNMI:    true,
+		Health:  true,
+	},
 		grpcserver.WithLogger(r.log),
+		grpcserver.WithWatchHandler(ssw.Watch),
+		grpcserver.WithCheckHandler(ssw.Check),
 	)
-	if err := r.server.Start(); err != nil {
+	if err := r.server.Start(r.ctx); err != nil {
 		return err
 	}
 	// register the service

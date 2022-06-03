@@ -10,7 +10,9 @@ import (
 	pkgv1 "github.com/yndd/ndd-core/apis/pkg/v1"
 	"github.com/yndd/ndd-runtime/pkg/logging"
 	"github.com/yndd/registrator/registrator"
+	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/client-go/rest"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
 type ReconcilerController interface {
@@ -24,11 +26,19 @@ type Options struct {
 	Logger            logging.Logger
 	GrpcServerAddress string
 	Registrator       registrator.Registrator
+	Scheme            *runtime.Scheme
 }
 
 func New(ctx context.Context, config *rest.Config, o *Options) (ReconcilerController, error) {
 	log := o.Logger
 	log.Debug("new reconciler controller")
+
+	c, err := client.New(config, client.Options{
+		Scheme: o.Scheme,
+	})
+	if err != nil {
+		return nil, err
+	}
 
 	r := &reconcilerControllerImpl{
 		options:           o,
@@ -37,6 +47,7 @@ func New(ctx context.Context, config *rest.Config, o *Options) (ReconcilerContro
 		grpcServerAddress: o.GrpcServerAddress,
 		log:               o.Logger,
 		ctx:               ctx,
+		client:            c,
 	}
 
 	return r, nil
@@ -45,6 +56,8 @@ func New(ctx context.Context, config *rest.Config, o *Options) (ReconcilerContro
 type reconcilerControllerImpl struct {
 	options *Options
 	log     logging.Logger
+
+	client client.Client
 
 	grpcServerAddress string
 
@@ -77,6 +90,7 @@ func (r *reconcilerControllerImpl) Start() error {
 		grpcserver.WithLogger(r.log),
 		grpcserver.WithWatchHandler(ssw.Watch),
 		grpcserver.WithCheckHandler(ssw.Check),
+		grpcserver.WithClient(r.client),
 	)
 	if err := r.server.Start(r.ctx); err != nil {
 		return err

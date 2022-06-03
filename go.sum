@@ -1608,8 +1608,8 @@ github.com/xlab/treeprint v0.0.0-20181112141820-a009c3971eca/go.mod h1:ce1O1j6Ut
 github.com/xordataexchange/crypt v0.0.3-0.20170626215501-b2862e3d0a77/go.mod h1:aYKd//L2LvnjZzWKhF00oedf4jCCReLcmhLdhm1A27Q=
 github.com/yndd/grpchandlers v0.0.1 h1:Aqt+bpk4ia1B0LrILV7Zahi8QUFsDZc2il8sug5uku4=
 github.com/yndd/grpchandlers v0.0.1/go.mod h1:ZR/jz4S8xdU1B538xvlPPy+F03NyKmhxVZt/Rv9cM0c=
-github.com/yndd/grpcserver v0.0.1 h1:hPi5RhuA862F6wlx9K0PHw8j8Zkud3j7PWNVtdEtPx0=
-github.com/yndd/grpcserver v0.0.1/go.mod h1:72LjUJQoX10WJFBmpILFoS+t8H7N7aCA+wMxFeZNTOk=
+github.com/yndd/grpcserver v0.0.2 h1:RQdBiW3PxMp8tyP148bn0yJzogoQam88yLuOI8m1O+M=
+github.com/yndd/grpcserver v0.0.2/go.mod h1:72LjUJQoX10WJFBmpILFoS+t8H7N7aCA+wMxFeZNTOk=
 github.com/yndd/ndd-core v0.1.6/go.mod h1:zlQTBILqiJlYj3WYy0yHGBBIMZemhVXoNnXE4vhF+pI=
 github.com/yndd/ndd-core v0.1.7/go.mod h1:zlQTBILqiJlYj3WYy0yHGBBIMZemhVXoNnXE4vhF+pI=
 github.com/yndd/ndd-core v0.2.19/go.mod h1:vL11h7D7PDf629XFxhLMa4OROZrq4GbsM6tmk+T93xQ=

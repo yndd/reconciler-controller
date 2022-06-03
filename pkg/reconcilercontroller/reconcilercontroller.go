@@ -95,6 +95,8 @@ func (r *reconcilerControllerImpl) Start() error {
 	if err := r.server.Start(r.ctx); err != nil {
 		return err
 	}
+	log.Debug("started grpc server...")
+
 	// register the service
 	r.registrator.Register(r.ctx, &registrator.Service{
 		Name:    os.Getenv("SERVICE_NAME"),

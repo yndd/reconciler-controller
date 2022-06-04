@@ -92,6 +92,7 @@ func (r *reconcilerControllerImpl) Start() error {
 		grpcserver.WithCheckHandler(ssw.Check),
 		grpcserver.WithClient(r.client),
 	)
+	log.Debug("created grpc server...")
 	if err := r.server.Start(r.ctx); err != nil {
 		return err
 	}

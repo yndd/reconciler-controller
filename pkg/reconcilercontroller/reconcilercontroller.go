@@ -93,7 +93,15 @@ func (r *reconcilerControllerImpl) Start() error {
 		grpcserver.WithClient(r.client),
 	)
 	log.Debug("created grpc server...")
-	if err := r.server.Start(r.ctx); err != nil {
+	var err error
+	go func() error {
+		err := r.server.Start(context.Background())
+		if err != nil {
+			return err
+		}
+		return nil
+	}()
+	if err != nil {
 		return err
 	}
 	log.Debug("started grpc server...")

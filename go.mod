@@ -4,7 +4,7 @@ go 1.18
 
 require (
 	github.com/yndd/grpchandlers v0.0.1
-	github.com/yndd/grpcserver v0.0.2
+	github.com/yndd/grpcserver v0.0.7
 	github.com/yndd/ndd-core v0.2.21-0.20220522110645-f0267f153e7e
 	github.com/yndd/ndd-runtime v0.5.16
 	github.com/yndd/registrator v0.0.20
